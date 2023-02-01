@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: alexandre-fernandez
-  description: fail2ban installation and configuration
+  description: fail2ban installation and configuration.
   license: MIT
   min_ansible_version: "2.1"
   platforms:
