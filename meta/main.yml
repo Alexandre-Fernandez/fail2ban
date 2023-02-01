@@ -1,4 +1,29 @@
 ---
-dependencies: []
+galaxy_info:
+  author: alexandre-fernandez
+  description: fail2ban installation and configuration
+  license: MIT
+  min_ansible_version: "2.1"
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+  galaxy_tags:
+    - system
+    - security
+    - fail2ban
+    - hardening
+
 collections:
   - community.general
+
+dependencies: []
