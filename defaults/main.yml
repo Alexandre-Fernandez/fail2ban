@@ -1,0 +1,9 @@
+fail2ban_ignore_controller: true
+fail2ban_ignore_host: true
+fail2ban_ignored: []
+fail2ban_bantime: 600
+fail2ban_findtime: 600
+fail2ban_maxretry: 5
+fail2ban_destemail: root@localhost
+fail2ban_sender: root@{{ ansible_fqdn }}
+fail2ban_enable_sshd: true

@@ -1,0 +1,7 @@
+---
+- name: Install fail2ban.
+  become: true
+  package:
+    name: fail2ban
+    state: present
+  notify: restart fail2ban

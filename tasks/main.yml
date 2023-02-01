@@ -1,0 +1,101 @@
+---
+- include_vars: "{{ ansible_os_family }}.yml"
+
+- include_tasks: "install-{{ ansible_os_family }}.yml"
+
+- name: Register controller public IP.
+  local_action:
+    module: shell
+    cmd: "dig +short myip.opendns.com @resolver1.opendns.com"
+  register: fail2ban_controller_ip_raw
+  changed_when: false
+  failed_when: fail2ban_controller_ip_raw.stdout | length == 0
+
+- set_fact:
+    fail2ban_ignored_ips: "{{ (fail2ban_localhost_ips + fail2ban_ignored) | join(' ') }}"
+    fail2ban_host_ip: "{{ ' ' + inventory_hostname if fail2ban_ignore_host else '' }}"
+    fail2ban_controller_ip: "{{ ' ' + fail2ban_controller_ip_raw.stdout if fail2ban_ignore_controller else '' }}"
+
+- name: Ignore IPs.
+  become: true
+  community.general.ini_file:
+    path: /etc/fail2ban/jail.local
+    section: DEFAULT
+    option: ignoreip
+    value: "{{ fail2ban_ignored_ips }}{{ fail2ban_host_ip }}{{ fail2ban_controller_ip }}"
+    owner: root
+    group: root
+    mode: "0644"
+    state: present
+
+- name: Configure ban time.
+  become: true
+  community.general.ini_file:
+    path: /etc/fail2ban/jail.local
+    section: DEFAULT
+    option: bantime
+    value: "{{ fail2ban_bantime }}"
+    owner: root
+    group: root
+    mode: "0644"
+    state: present
+
+- name: Configure find time.
+  become: true
+  community.general.ini_file:
+    path: /etc/fail2ban/jail.local
+    section: DEFAULT
+    option: findtime
+    value: "{{ fail2ban_findtime }}"
+    owner: root
+    group: root
+    mode: "0644"
+    state: present
+
+- name: Configure maximum retries.
+  become: true
+  community.general.ini_file:
+    path: /etc/fail2ban/jail.local
+    section: DEFAULT
+    option: maxretry
+    value: "{{ fail2ban_maxretry }}"
+    owner: root
+    group: root
+    mode: "0644"
+    state: present
+
+- name: Configure sender email.
+  become: true
+  community.general.ini_file:
+    path: /etc/fail2ban/jail.local
+    section: DEFAULT
+    option: sender
+    value: "{{ fail2ban_sender }}"
+    owner: root
+    group: root
+    mode: "0644"
+    state: present
+
+- name: Configure destination email.
+  become: true
+  community.general.ini_file:
+    path: /etc/fail2ban/jail.local
+    section: DEFAULT
+    option: destemail
+    value: "{{ fail2ban_destemail }}"
+    owner: root
+    group: root
+    mode: "0644"
+    state: present
+
+- name: Enable fail2ban on sshd.
+  become: true
+  community.general.ini_file:
+    path: /etc/fail2ban/jail.local
+    section: "{{ fail2ban_sshd.name }}"
+    option: enabled
+    value: "true"
+    owner: root
+    group: root
+    mode: "0644"
+    state: "{{ 'present' if fail2ban_enable_sshd else 'absent' }}"

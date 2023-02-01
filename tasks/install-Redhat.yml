@@ -1,0 +1,8 @@
+---
+- name: Install fail2ban.
+  become: true
+  package:
+    name: fail2ban
+    state: present
+    enablerepo: epel
+  notify: restart fail2ban
