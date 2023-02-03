@@ -92,7 +92,7 @@
   become: true
   community.general.ini_file:
     path: /etc/fail2ban/jail.local
-    section: "{{ fail2ban_sshd.name }}"
+    section: "sshd"
     option: enabled
     value: "true"
     owner: root
